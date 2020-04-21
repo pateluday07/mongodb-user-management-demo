@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://writer:DggeWYeOnOi7qO6o@cluster0-lw94t.azure.mongodb.net/user-management-demo?authSource=admin&replicaSet=Cluster0-shard-0&readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=true
+      auto-index-creation: false
