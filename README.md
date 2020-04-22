@@ -39,3 +39,4 @@ You can check this project on the live instance,
 hit this URL [Swagger on Live Instance] 
 (https://manage-users-demo.herokuapp.com/swagger-ui.html#/) 
 to get familiar with the APIs.
+**This App is deployed on Heroku and it's using MongoDB clusters deployed on Azure**
