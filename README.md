@@ -26,7 +26,7 @@ For building and running the application you need:
 2. Open **build.gradle** file from your favorite IDE
 3. Select option **Open as Project** in your IDE
 4. Start MongoDB
-5. Config MongoDB properties from `src/main/resources/application.yml`
+5. Config MongoDB properties from `src/main/resources/application-local.yml`
 6. Go to the `com.user.management.UserManagementMongodbDemoApplication` and run the class.
 Or you can open the IDE terminal and simply run the following command
                 
@@ -45,3 +45,15 @@ MongoDB clusters deployed on Azure, to store data.**
 
 **The database will be reset every Monday for 
 memory management.**
+
+### Docker
+in case if you have docker in your machine then just go inside 
+the **mongodb-user-management-demo** directory and execute the 
+following command:
+
+    docker-compose up
+    
+And done.
+
+Now you can open the swagger to access the APIs: 
+[Swagger] (http://localhost:8084/swagger-ui.html)

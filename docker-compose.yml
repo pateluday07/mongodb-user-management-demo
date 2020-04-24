@@ -1,0 +1,20 @@
+version: "3"
+services:
+    mongodb:
+        image: mongo:4.2.6
+        container_name: user_management_demo_mongodb
+        ports:
+          - "27017:27017"
+        volumes:
+          - dev-mongo:/data/db
+
+    spring_boot_app:
+        image: uday07/mongodb-user-management-demo
+        container_name: user_management_demo_spring_boot
+        ports:
+          - "8084:8080"
+        depends_on:
+          - mongodb
+
+volumes:
+    dev-mongo:
