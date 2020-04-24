@@ -47,7 +47,7 @@ MongoDB clusters deployed on Azure, to store data.**
 memory management.**
 
 ### Docker
-in case if you have docker in your machine then just go inside 
+In case if you have docker in your machine then just go inside 
 the **mongodb-user-management-demo** directory and execute the 
 following command:
 
