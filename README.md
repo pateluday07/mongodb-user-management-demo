@@ -33,11 +33,10 @@ Or you can open the IDE terminal and simply run the following command
        gradlew bootrun
 
 You can open the swagger to access the APIs: 
-[Swagger] (http://localhost:8080/swagger-ui.html)
+[Swagger](http://localhost:8080/swagger-ui.html)
 
 You can check this project on the live instance, 
-hit this URL [Swagger on Live Instance] 
-(https://manage-users-demo.herokuapp.com/swagger-ui.html#/) 
+hit this URL [Swagger on Live Instance](https://manage-users-demo.herokuapp.com/swagger-ui.html#/) 
 to get familiar with the APIs.
 
 **This App is deployed on Heroku, and it's using 
@@ -56,4 +55,4 @@ following command:
 And done.
 
 Now you can open the swagger to access the APIs: 
-[Swagger] (http://localhost:8084/swagger-ui.html)
+[Swagger](http://localhost:8084/swagger-ui.html)
