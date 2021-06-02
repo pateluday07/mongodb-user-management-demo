@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
 
     private void validateNewUser(UserDto userDto) {
         if (StringUtils.isNoneBlank(userDto.getId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New User Should Not Have An Id");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NEW_USER_SHOULD_NOT_HAVE_AN_ID_MSG);
         }
         if (userRespository.existsByContactEmail(userDto.getContact().getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, EMAIL_ALREADY_EXISTS_MSG);
@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
 
     private void validateExistingUser(UserDto userDto) {
         if (StringUtils.isBlank(userDto.getId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Id Is Not Available");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, USER_ID_NULL_MSG);
         }
         if (!userRespository.existsById(userDto.getId())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND_MSG.concat(userDto.getId()));
@@ -144,10 +144,10 @@ public class UserServiceImpl implements UserService {
     private void validatePhone(UserDto userDto) {
         String phone = userDto.getContact().getPhone().trim();
         if (!StringUtils.isNumeric(phone)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Must Have Numbers Only");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, PHONE_MUST_HAVE_NUMBERS_MSG);
         }
         if (phone.length() < 8 || phone.length() > 12) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number Minimum Length Must Be 8 Or Max Length Must Be 12");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, PHONE_LENGTH_INVALID_MSG);
         }
     }
 
