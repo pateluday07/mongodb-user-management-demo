@@ -16,6 +16,7 @@ public class ExceptionConstants {
     public static final String PHONE_ALREADY_EXISTS_MSG = "Phone Already Exists";
     public static final String PHONE_LENGTH_INVALID_MSG = "Phone Number Minimum Length Must Be 8 Or Max Length Must Be 12";
     public static final String USER_NOT_FOUND_MSG = "User Is Not Available For The Id: ";
+    public static final String USER_NOT_FOUND_BY_EMAIL_MSG = "User Not Available For The Email: ";
 
     public static final String CAR_NOT_FOUND_MSG = "Car Is Not Available For The Id: ";
 }

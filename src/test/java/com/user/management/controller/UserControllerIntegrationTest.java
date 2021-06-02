@@ -5,7 +5,6 @@ import com.user.management.model.Car;
 import com.user.management.model.Contact;
 import com.user.management.model.User;
 import com.user.management.repository.UserRespository;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static com.user.management.constants.ExceptionConstants.*;
@@ -237,7 +235,7 @@ class UserControllerIntegrationTest {
     void getUserById_ThrowsException_IfUserNotFound() throws Exception {
         String id = "11";
         mvc.perform(MockMvcRequestBuilders
-                .get(USERS_API_PREFIX.concat("/{userId}"),id)
+                .get(USERS_API_PREFIX.concat("/{userId}"), id)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(status().reason(USER_NOT_FOUND_MSG.concat(id)));
@@ -247,7 +245,7 @@ class UserControllerIntegrationTest {
     void getUserById_NoException_IfUserFound() throws Exception {
         User initialUser = saveInitialUser();
         mvc.perform(MockMvcRequestBuilders
-                .get(USERS_API_PREFIX.concat("/{userId}"),initialUser.getId())
+                .get(USERS_API_PREFIX.concat("/{userId}"), initialUser.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(initialUser.getId()));
@@ -274,8 +272,47 @@ class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$", hasSize(1)));
     }
 
-    private User saveInitialUser() throws Exception{
-        contact.setEmail("abc@narola.email");
+    @Test
+    void deleteUser_NoException_IfUserDeleted() throws Exception {
+        User initialUser = saveInitialUser();
+
+        mvc.perform(MockMvcRequestBuilders
+                .delete(USERS_API_PREFIX.concat("/{userId}"), initialUser.getId())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteUser_ThrowsException_IfUserNotFound() throws Exception {
+        String id = "11";
+        mvc.perform(MockMvcRequestBuilders
+                .delete(USERS_API_PREFIX.concat("/{userId}"), id)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(status().reason(USER_NOT_FOUND_MSG.concat(id)));
+    }
+
+    @Test
+    void getUserByEmail_NoException_IfUserFound() throws Exception {
+        User initialUser = saveInitialUser();
+
+        mvc.perform(MockMvcRequestBuilders
+                .get(USERS_API_PREFIX.concat("/by-email/{email}"), initialUser.getContact().getEmail())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getUserByEmail_ThrowsException_IfUserNotFound() throws Exception {
+        mvc.perform(MockMvcRequestBuilders
+                .get(USERS_API_PREFIX.concat("/by-email/{email}"), user.getContact().getEmail())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(status().reason(USER_NOT_FOUND_BY_EMAIL_MSG.concat(user.getContact().getEmail())));
+    }
+
+    private User saveInitialUser() throws Exception {
+        contact.setEmail("abc@gmail.email");
         contact.setPhone("00123456789");
         String content = mvc.perform(MockMvcRequestBuilders
                 .post(USERS_API_PREFIX)

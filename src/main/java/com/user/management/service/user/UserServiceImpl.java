@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
         return userMapper
                 .toDtoExceptCar(userRespository
                         .findByContactEmail(email)
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Available For The Email: ".concat(email))));
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND_BY_EMAIL_MSG.concat(email))));
     }
 
     @Override
