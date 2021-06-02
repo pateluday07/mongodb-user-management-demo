@@ -5,6 +5,7 @@ import com.user.management.model.Car;
 import com.user.management.model.Contact;
 import com.user.management.model.User;
 import com.user.management.repository.UserRespository;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,10 +20,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
 
 import static com.user.management.constants.ExceptionConstants.*;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -184,7 +186,7 @@ class UserControllerIntegrationTest {
     void updateUser_ThrowsException_IfEmailAlreadyExists() throws Exception {
         saveUser_NoException_WhenDataIsValid();
 
-        User userToUpdate = updateUserHelper();
+        User userToUpdate = saveInitialUser();
         userToUpdate.getContact().setEmail("pateluday07@gmail.com");
         mvc.perform(MockMvcRequestBuilders
                 .put(USERS_API_PREFIX)
@@ -199,7 +201,7 @@ class UserControllerIntegrationTest {
     void updateUser_ThrowsException_IfPhoneAlreadyExists() throws Exception {
         saveUser_NoException_WhenDataIsValid();
 
-        User userToUpdate = updateUserHelper();
+        User userToUpdate = saveInitialUser();
         userToUpdate.getContact().setPhone("1234567890");
         mvc.perform(MockMvcRequestBuilders
                 .put(USERS_API_PREFIX)
@@ -216,7 +218,7 @@ class UserControllerIntegrationTest {
         String lastName = "Doe";
         int age = 30;
 
-        User userToUpdate = updateUserHelper();
+        User userToUpdate = saveInitialUser();
         userToUpdate.setFirstName(firstName);
         userToUpdate.setLastName(lastName);
         userToUpdate.setAge(age);
@@ -231,7 +233,48 @@ class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.age").value(age));
     }
 
-    private User updateUserHelper() throws Exception{
+    @Test
+    void getUserById_ThrowsException_IfUserNotFound() throws Exception {
+        String id = "11";
+        mvc.perform(MockMvcRequestBuilders
+                .get(USERS_API_PREFIX.concat("/{userId}"),id)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(status().reason(USER_NOT_FOUND_MSG.concat(id)));
+    }
+
+    @Test
+    void getUserById_NoException_IfUserFound() throws Exception {
+        User initialUser = saveInitialUser();
+        mvc.perform(MockMvcRequestBuilders
+                .get(USERS_API_PREFIX.concat("/{userId}"),initialUser.getId())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(initialUser.getId()));
+    }
+
+    @Test
+    void getAllUsers_EmptyList_IfUsersNotFound() throws Exception {
+        mvc.perform(MockMvcRequestBuilders
+                .get(USERS_API_PREFIX)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isEmpty());
+    }
+
+    @Test
+    void getAllUsers_ListOfUsers_IfUsersFound() throws Exception {
+        saveInitialUser();
+
+        mvc.perform(MockMvcRequestBuilders
+                .get(USERS_API_PREFIX)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isNotEmpty())
+                .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    private User saveInitialUser() throws Exception{
         contact.setEmail("abc@narola.email");
         contact.setPhone("00123456789");
         String content = mvc.perform(MockMvcRequestBuilders
