@@ -34,12 +34,13 @@ class UserControllerIntegrationTest {
 
     private static final String USERS_API_PREFIX = "/api/users";
 
+    private final ObjectMapper mapper = new ObjectMapper();
+
     @Autowired
     private MockMvc mvc;
     @Autowired
     private UserRespository userRespository;
 
-    private ObjectMapper mapper = new ObjectMapper();
     private User user;
     private Contact contact;
     private List<Car> cars;
@@ -309,6 +310,25 @@ class UserControllerIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(status().reason(USER_NOT_FOUND_BY_EMAIL_MSG.concat(user.getContact().getEmail())));
+    }
+
+    @Test
+    void getUserByPhone_NoException_IfUserFound() throws Exception {
+        User initialUser = saveInitialUser();
+
+        mvc.perform(MockMvcRequestBuilders
+                .get(USERS_API_PREFIX.concat("/by-phone/{phone}"), initialUser.getContact().getPhone())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getUserByPhone_ThrowsException_IfUserNotFound() throws Exception {
+        mvc.perform(MockMvcRequestBuilders
+                .get(USERS_API_PREFIX.concat("/by-phone/{phone}"), user.getContact().getPhone())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(status().reason(USER_NOT_FOUND_BY_PHONE_MSG.concat(user.getContact().getPhone())));
     }
 
     private User saveInitialUser() throws Exception {

@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
         return userMapper
                 .toDtoExceptCar(userRespository
                         .findByContactPhone(phone)
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Available For The Phone: ".concat(phone))));
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND_BY_PHONE_MSG.concat(phone))));
     }
 
     private UserDto saveUserHelper(UserDto userDto) {
